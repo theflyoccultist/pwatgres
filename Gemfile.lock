@@ -1,0 +1,26 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colorize (1.1.0)
+    dotenv (3.1.8)
+    io-console (0.8.0)
+    pg (1.5.9)
+    readline (0.0.4)
+      reline
+    reline (0.6.1)
+      io-console (~> 0.5)
+    securerandom (0.4.1)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  colorize
+  dotenv
+  pg
+  readline
+  securerandom
+
+BUNDLED WITH
+   2.6.5
