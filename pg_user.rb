@@ -37,6 +37,10 @@ rescue PG::Error => e
   exit 1
 end
 
+def qi(str)
+  PG::Connection.quote_ident(str)
+end
+
 puts('PostgreSQL CLI tool to automate setup for your project'.colorize(:cyan))
 
 USER = prompt('> New User: ')
@@ -55,13 +59,13 @@ begin
 
   puts "Setting up PostgreSQL database for #{USER}...".colorize(:light_blue)
 
-  run_query(conn, "CREATE USER #{PG::Connection.quote_ident(USER)} WITH PASSWORD '#{PASSWORD}';", 'Create User')
+  run_query(conn, "CREATE USER #{qi(USER)} WITH PASSWORD '#{PASSWORD}';", 'Create User')
 
-  run_query(conn, "GRANT #{PG::Connection.quote_ident(USER)} TO #{PG::Connection.quote_ident(ENV['PG_CLI_USER'])};",
+  run_query(conn, "GRANT #{qi(USER)} TO #{qi(ENV['PG_CLI_USER'])};",
             'Grant User Role to the Admin user')
 
-  run_query(conn, "CREATE DATABASE #{PG::Connection.quote_ident(PROJECT_DB)}
-            OWNER #{PG::Connection.quote_ident(USER)};", 'Create the database and assign ownership to the user')
+  run_query(conn, "CREATE DATABASE #{qi(PROJECT_DB)}
+            OWNER #{qi(USER)};", 'Create the database and assign ownership to the user')
 
   # Reconnect to the new database for schema operations
   conn.close
@@ -72,24 +76,24 @@ begin
     host: '/var/run/postgresql'
   )
 
-  run_query(conn, "CREATE SCHEMA #{PG::Connection.quote_ident(SCHEMA)}
-            AUTHORIZATION #{PG::Connection.quote_ident(USER)};", 'Create Custom Schema')
-  run_query(conn, "ALTER DATABASE #{PG::Connection.quote_ident(PROJECT_DB)} SET search_path TO
-            #{PG::Connection.quote_ident(SCHEMA)};", 'Grant privileges')
+  run_query(conn, "CREATE SCHEMA #{qi(SCHEMA)}
+            AUTHORIZATION #{qi(USER)};", 'Create Custom Schema')
+  run_query(conn, "ALTER DATABASE #{qi(PROJECT_DB)} SET search_path TO
+            #{qi(SCHEMA)};", 'Grant privileges')
 
-  run_query(conn, "GRANT USAGE ON SCHEMA #{PG::Connection.quote_ident(SCHEMA)}
-            TO #{PG::Connection.quote_ident(USER)};", 'Grant usage on schema')
-  run_query(conn, "GRANT CREATE ON SCHEMA #{PG::Connection.quote_ident(SCHEMA)}
-            TO #{PG::Connection.quote_ident(USER)};", 'Granting Create on Schema')
+  run_query(conn, "GRANT USAGE ON SCHEMA #{qi(SCHEMA)}
+            TO #{qi(USER)};", 'Grant usage on schema')
+  run_query(conn, "GRANT CREATE ON SCHEMA #{qi(SCHEMA)}
+            TO #{qi(USER)};", 'Granting Create on Schema')
 
-  run_query(conn, "ALTER DEFAULT PRIVILEGES FOR ROLE #{PG::Connection.quote_ident(USER)} IN SCHEMA
-            #{PG::Connection.quote_ident(SCHEMA)} GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES
-            TO #{PG::Connection.quote_ident(USER)};", 'Set default privileges for future tables')
-  run_query(conn, "ALTER DEFAULT PRIVILEGES FOR ROLE #{PG::Connection.quote_ident(USER)} IN SCHEMA
-            #{PG::Connection.quote_ident(SCHEMA)} GRANT USAGE, SELECT, UPDATE ON SEQUENCES
-            TO #{PG::Connection.quote_ident(USER)};", 'Set default privileges for future sequences')
+  run_query(conn, "ALTER DEFAULT PRIVILEGES FOR ROLE #{qi(USER)} IN SCHEMA
+            #{qi(SCHEMA)} GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES
+            TO #{qi(USER)};", 'Set default privileges for future tables')
+  run_query(conn, "ALTER DEFAULT PRIVILEGES FOR ROLE #{qi(USER)} IN SCHEMA
+            #{qi(SCHEMA)} GRANT USAGE, SELECT, UPDATE ON SEQUENCES
+            TO #{qi(USER)};", 'Set default privileges for future sequences')
 
-  run_query(conn, "ALTER USER #{PG::Connection.quote_ident(USER)} WITH NOCREATEDB NOCREATEROLE;",
+  run_query(conn, "ALTER USER #{qi(USER)} WITH NOCREATEDB NOCREATEROLE;",
             'Locking down user abilities')
 
   puts "\n😻 Database setup complete for '#{PROJECT_DB}' with user '#{USER}'!".colorize(:green)
