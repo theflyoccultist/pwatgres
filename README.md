@@ -13,17 +13,17 @@ This script:
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 Secure password generation with `SecureRandom`
-- 🧙‍♀️ Elegant logging with `run_query` helper to locate failing SQL
-- 🎨 Terminal-friendly output with `colorize`
-- 🎭 ASCII Art for maximum flair
-- 📜 Postgres connection string (optional output)
+- Secure password generation with `SecureRandom`
+- Elegant logging with `run_query` helper to locate failing SQL
+- Terminal-friendly output with `colorize`
+- ASCII Art for maximum flair
+- Postgres connection string (optional output)
 
 ---
 
-## 🔧 Requirements
+## Requirements
 
 - Ruby (2.7+ recommended)
 - PostgreSQL client libraries (`libpq-dev`)
@@ -37,7 +37,7 @@ bundle install
 
 ---
 
-## 🧪 Running the Script
+## Running the Script
 
 Ensure you have a .env file with:
 
@@ -62,7 +62,7 @@ At the end, the script will output the generated password and optionally a ready
 
 ---
 
-## 🛡 Permissions Note
+## Permissions Note
 
 Your PG_CLI_USER should:
 
@@ -83,7 +83,7 @@ GRANT your_new_user TO your_admin_user;
 
 ---
 
-## 💀 Known Limitations
+## Known Limitations
 
 - Does not support remote database setups (assumes local Unix socket `/var/run/postgresql`)
 > [!TIP]
@@ -92,9 +92,5 @@ GRANT your_new_user TO your_admin_user;
 - Only supports PostgreSQL (obviously)
 
 ---
-
-## 🧙 Author Notes
-
-This is part of the **TSSR curriculum and system integration practice.** Originally developed as a crash-test project to turn DB setup from dread into a dramatic one-liner.
 
 You are encouraged to customize it and break things.
